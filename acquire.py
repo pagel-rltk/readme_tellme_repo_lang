@@ -285,7 +285,7 @@ def get_readmes():
     # get json
     else:
         # read json as df
-        df = pd.read_json(filename)
+        return pd.read_json(filename)
 
 
 if __name__ == "__main__":
