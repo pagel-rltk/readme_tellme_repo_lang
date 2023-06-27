@@ -131,5 +131,6 @@ dmypy.json
 
 # other
 *.csv
-*.txt
+# *.txt
 *.sqlite
+*.json
