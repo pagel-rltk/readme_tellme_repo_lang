@@ -25,7 +25,7 @@ If the README.md file has some of the below information we could point out the d
 | --------------- | --------------------------------------------------------------------------------------- |
 | repo            | The owners/organization and the repository name                                         |
 | language        | The most common programming language in the repository                                  |
-| top3other       | The top 3 most common programming languages across repositories and the rest are other |
+| top3other       | The top 3 most common programming languages across repositories and the rest are other  |
 | readme_contents | The content inside the README.md file                                                   |
 | clean           | The content after the prepare phase.                                                    |
 | lemmatized      | The clean content after being lemmatized.                                               |
