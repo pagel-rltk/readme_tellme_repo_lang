@@ -18,6 +18,7 @@ import unicodedata
 import re
 import nltk 
 from nltk.corpus import stopwords
+from sklearn.model_selection import train_test_split
 
 ##### FUNCTIONS #####
 
@@ -135,10 +136,45 @@ def prep_readmes(df):
     df = df.assign(clean = df.apply(lambda row : remove_stopwords(tokenize(basic_clean(row.readme_contents)),"'"), axis=1))
     # Derive column 'lemmatized' from column: lemmatized 'clean'
     df = df.assign(lemmatized = df.apply(lambda row : lemmatize(row.clean), axis=1))
+    # add column for top3 and other languages to make predictions simpler
+    df['top3other'] = np.where(df.language == 'JavaScript','JavaScript','other')
+    df['top3other'] = np.where(df.language == 'Objective-C','Objective-C',df['top3other'])
+    df['top3other'] = np.where(df.language == 'Java','Java',df['top3other'])
     # return prepped df
     return df
 
 
+def split_data(df, strat, seed=42, test=.2, validate=.25):
+    """
+    The function `split_data` takes in a dataframe `df`, a stratification variable `strat`, and optional
+    arguments for the random seed, test size, and validation size, and returns three separate dataframes
+    for training, validation, and testing.
+    
+    :param df: The input dataframe that you want to split into train, validation, and test sets
+    :param strat: The strat parameter is used for stratified sampling. It is a column name in the
+    dataframe df that is used to group the data before splitting. This is useful when you want to ensure
+    that the train, validation, and test sets have similar distributions of a specific variable
+    :param seed: The seed parameter is used to ensure reproducibility of the random splitting of the
+    data. By setting a specific seed value, the same random splits will be generated each time the
+    function is called with the same dataset, defaults to 42 (optional)
+    :param test: The "test" parameter represents the proportion of the data that should be allocated for
+    testing. In this case, it is set to 0.2, which means that 20% of the data will be used for testing
+    :param validate: The `validate` parameter represents the proportion of the data that will be used
+    for validation. It is a decimal value between 0 and 1, where 0 represents no validation data and 1
+    represents all data used for validation
+    :return: three dataframes: train, validate, and test.
+    """
+    # prep strat variable
+    st = [strat]
+    # split train_val and test
+    train_validate, test = train_test_split(df, test_size=test, random_state=seed, stratify=df[st])
+    # split train and val
+    train, validate = train_test_split(train_validate, 
+                                        test_size=validate, 
+                                        random_state=seed, 
+                                        stratify=train_validate[st])
+    # return train, val and test
+    return train, validate, test
 
 
 
