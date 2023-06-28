@@ -38,7 +38,7 @@ def basic_clean(words):
     # normalize characters
     words_uni = unicodedata.normalize('NFKD',words_low).encode('ascii','ignore').decode('utf-8')
     # drop characters like -./,!?
-    words_re = re.sub(r'[^a-z0-9\'\-\.\/\[\]\{\}\s]','',words_uni)
+    words_re = re.sub(r'[^a-z\'\-\.\/\[\]\{\}\s]','',words_uni)
     return re.sub(r'[\-\.\/\[\]\{\}]',' ',words_re)
 
 def tokenize(words_bc):
@@ -133,7 +133,7 @@ def prep_readmes(df):
     # reset index after null removal
     df = df.reset_index().drop(columns='index')
     # Derive column 'clean' from column: cleanup up 'readme_contents'
-    df = df.assign(clean = df.apply(lambda row : remove_stopwords(tokenize(basic_clean(row.readme_contents)),"'"), axis=1))
+    df = df.assign(clean = df.apply(lambda row : remove_stopwords(tokenize(basic_clean(row.readme_contents)),["'","&#9;"]), axis=1))
     # Derive column 'lemmatized' from column: lemmatized 'clean'
     df = df.assign(lemmatized = df.apply(lambda row : lemmatize(row.clean), axis=1))
     # add column for top3 and other languages to make predictions simpler
