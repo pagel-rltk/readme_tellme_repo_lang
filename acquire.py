@@ -52,7 +52,49 @@ reps = reps_file.read()
 # replacing end splitting the text 
 # when newline ('\n') is seen.
 REPOS = reps.split("\n")
-
+# ----------------------------------------------------------------------------------
+'''
+*------------------*
+|                  |
+|     SUMMARY      |
+|                  |
+*------------------*
+'''
+# ----------------------------------------------------------------------------------
+# a function that show a summary of the dataset
+def data_summary(df):
+    """
+    This function that show a summary of the dataset 
+    """
+    # Print the shape of the DataFrame
+    print(f'data shape: {df.shape}')
+    # set all the columns names to a lowercase
+    df.columns = df.columns.str.lower()
+    # Create a summary DataFrame
+    summary = pd.DataFrame(df.dtypes, columns=['data type'])
+    # Calculate the number of missing values
+    summary['#missing'] = df.isnull().sum().values 
+    # Calculate the percentage of missing values
+    summary['%missing'] = df.isnull().sum().values / len(df)* 100
+    # Calculate the number of unique values
+    summary['#unique'] = df.nunique().values
+    # Create a descriptive DataFrame
+    desc = pd.DataFrame(df.describe(include='all').transpose())
+    # Add the minimum, maximum, and first three values to the summary DataFrame
+    summary['count'] = desc['count'].values
+    # summary['mean'] = desc['mean'].values
+    # summary['std'] = desc['std'].values
+    # summary['min'] = desc['min'].values
+    # summary['25%'] = desc['25%'].values
+    # summary['50%'] = desc['50%'].values
+    # summary['75%'] = desc['75%'].values
+    # summary['max'] = desc['max'].values
+    summary['first_value'] = df.loc[0].values
+    summary['second_value'] = df.loc[1].values
+    # summary['third_value'] = df.loc[2].values
+    
+    # Return the summary DataFrame
+    return summary
 
 # use function to get fresh list
 def get_repo_links():
