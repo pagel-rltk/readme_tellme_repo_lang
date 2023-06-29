@@ -7,7 +7,13 @@ Functions:
 - 
 - 
 """
-
+'''
+*------------------*
+|                  |
+|     MODELING     |
+|                  |
+*------------------*
+'''
 
 ##### IMPORTS #####
 
@@ -21,6 +27,7 @@ import nltk
 import nltk.sentiment
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import MinMaxScaler
 
 # models
 from sklearn.linear_model import LogisticRegression
@@ -155,6 +162,18 @@ def class_models(Xtr,ytr,Xv,yv):
         metrics.append(output)
     metrics_df = pd.DataFrame(metrics)
     return metrics_df
+
+
+# ----------------------------------------------------------------------------
+def get_Xs(train, validate, test):
+    # baseline
+    X_train = train[['lemmatized']]
+    y_train = train.top3other
+    X_val = validate[['lemmatized']]
+    y_val = validate.top3other
+    X_test = test[['lemmatized']]
+    y_test = test.top3other
+    return X_train, X_val, X_test, y_train, y_val, y_test
 
 
 def cnb_model(Xtr,ytr,Xv,yv):
