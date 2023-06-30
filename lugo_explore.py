@@ -1,4 +1,4 @@
-# standar
+# standard
 import pandas as pd
 
 # n-grams
@@ -37,13 +37,10 @@ def get_normalized_value_counts(*args):
     DataFrame: A DataFrame where each column represents a DataFrame and each row 
     represents a unique value from the 'top3other' column and its normalized count.
     """
-    # Initialize a dictionary to store the value counts
-    value_counts = {}
-
-    # Calculate the normalized value counts for each DataFrame
-    for i, df in enumerate(args):
-        value_counts[i] = df.top3other.value_counts(normalize=True)
-
+    value_counts = {
+        i: df.top3other.value_counts(normalize=True)
+        for i, df in enumerate(args)
+    }
     # Convert the dictionary to a DataFrame
     df_value_counts = pd.DataFrame(value_counts)
 
@@ -124,19 +121,19 @@ def compare_readme_lengths(train, alpha=0.05):
 
     # Perform the Wilcoxon signed-rank test for each 'top3other' category
     for lang in train.top3other.unique():
-        print('|--------------------------------------|')
+        print('|--------------------------------------')
         print(lang)
         stat, p = wilcoxon(train[train.top3other == lang].length - median_length)
 
         # Print the result
         if p < alpha:
-            print(f'The readme lengths of {lang} are significantly different than the population median readme length (p={p}).')
+            print(f'The median readme length of {lang} is significantly different than the population median readme length (p={p}).')
         else:
-            print(f'The readme lengths of {lang} are NOT significantly different than the population median readme length (p={p}).')
+            print(f'The median readme length of {lang} is NOT significantly different than the population median readme length (p={p}).')
 
 # ---------------------------------Question 3 ----------------------------------------
 # ------------------------------------------------------------------------------------
-def count_unique_words_by_language(train):
+def count_unique_words_by_language(train, p=True):
     """
     This function takes in a DataFrame and calculates the number of unique words used 
     in the README files of different programming languages. It prints these numbers.
@@ -160,12 +157,13 @@ def count_unique_words_by_language(train):
     other = [word for row in train[train.top3other=='other']['lemmatized'] for word in row.split()]
     all_words = [word for row in train['lemmatized'] for word in row.split()]
 
-    # Print the number of unique words used in each programming language
-    print("JavaScript unique words:", count_unique_words(javascript))
-    print("Java unique words:", count_unique_words(java))
-    print("Objective-C unique words:", count_unique_words(objective_c))
-    print("Other unique words:", count_unique_words(other))
-    print("All unique words:", count_unique_words(all_words))
+    if p == True:
+        # Print the number of unique words used in each programming language
+        print("JavaScript unique words:", count_unique_words(javascript))
+        print("Java unique words:", count_unique_words(java))
+        print("Objective-C unique words:", count_unique_words(objective_c))
+        print("Other unique words:", count_unique_words(other))
+        print("All unique words:", count_unique_words(all_words))
     return javascript, java, objective_c, other, all_words
 # ------------------------------------------------------------------------------------
 def plot_unique_words_count(javascript, java, objective_c, other, all_words):
@@ -243,7 +241,7 @@ def analyze_unique_words(*args):
 def conv_dict_to_df(unique_word_dicts):
     # Convert dictionaries to DataFrame
     df = pd.DataFrame(unique_word_dicts)
-    df.columns = ['List_' + str(i) for i in df.columns]
+    df.columns = [f'List_{str(i)}' for i in df.columns]
 
     # Rename columns
     df.columns = ['uni_javascript', 'uni_java', 'uni_objective_c', 'uni_other']

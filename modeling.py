@@ -74,7 +74,7 @@ def get_unique(train):
     :return: a list of unique words from the given input.
     """
     # get all words of each language
-    javascript, java, objective_c, other, all_words = count_unique_words_by_language(train)
+    javascript, java, objective_c, other, all_words = count_unique_words_by_language(train,p=False)
     # get list of dicts of each lang for unique words
     f = [list(analyze_unique_words(javascript, java, objective_c, other)[i].keys()) for i in range(4)]
     # make list of dicts into one list
