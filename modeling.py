@@ -28,7 +28,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import naive_bayes as nb
 
 # local
-from lugo_explore import count_unique_words_by_language
+from explore import count_unique_words_by_language
 
 
 ##### FUNCTIONS #####
